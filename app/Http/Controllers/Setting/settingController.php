@@ -15,8 +15,11 @@ class settingController extends Controller
             "phone_email"=>"required|E-Mail",
 
         ];
+        $message = [
+            "phone_email.required" => "App email is required"
+        ];
 
-        $this->validate($request,$rules);
+        $this->validate($request,$rules,$message);
     }
 
 

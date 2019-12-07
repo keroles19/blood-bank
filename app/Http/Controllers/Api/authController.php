@@ -26,7 +26,6 @@ class authController extends Controller
             "date_of_birth"=>"required",
             "password"=>"required|confirmed",
             "blood_type_id"=>"required|exists:blood_types,id",
-            "last_donation_date"=>"required",
             "city_id"=>"required|exists:cities,id",
 
         ]);

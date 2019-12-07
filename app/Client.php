@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Client extends Authenticatable
 {
 
+
+    protected $guarded = 'client';
     protected $table = 'clients';
     public $timestamps = true;
     protected $fillable = array('id','active', 'timestamps','name', 'phone', 'password', 'email', 'date_of_birth', 'blood_type_id', 'last_donation_date', 'city_id', 'pin_code', 'api_token');

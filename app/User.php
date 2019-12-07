@@ -2,17 +2,17 @@
 
 namespace App;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use EntrustUserTrait; // add this trait to your user model
 
 
-    use Notifiable;
+    use Notifiable , HasRoles;
 
+    protected $guarded = 'web';
     /**
      * The attributes that are mass assignable.
      *

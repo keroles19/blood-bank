@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\BloodType;
+use App\City;
+use App\DonationRequest;
+use App\Setting;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+        $settings = Setting::first();
+        view()->share(compact('settings'));
+
     }
 }

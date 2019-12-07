@@ -17,12 +17,12 @@
         </div>
         <div class="card-body">
             @if($record->image)
-            <img class="card-img-top" src="{{public_path('images\\'.$record->image)}}" >
+            <img class="card-img-top" src="{{asset('images/'.$record->image)}}" >
            @endif
             <h5 class="card-title ">{{$record->title}}</h5>
             <p class="card-text">{{$record->body}}</p>
             <p class="text-muted">{{$record->created_at}}</p>
-             <p class="text-muted"><span class="text-bold">Category is : </span>{{$category::find($record->category_id)->pluck('name')->first()}}</p>
+             <p class="text-muted"><span class="text-bold">Category is : </span>{{$category::find($record->category_id)->getAttribute('name')}}</p>
 
 
 

@@ -52,7 +52,7 @@
                         </div>
                         <div class="form-group">
                             <label>About app</label>
-                            <textarea class="form-control"  name="About app">{{$record->about_app}}</textarea>
+                            <textarea class="form-control"  name="about_app">{{$record->about_app}}</textarea>
                         </div>
                         <div class="form-group">
                             <label>Play store url</label>

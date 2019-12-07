@@ -167,17 +167,17 @@
                         </a>
                     </li>
 
-                    <!--  settings   -->
+                    <!--  user   -->
                     <li class="nav-item">
                         <a href="{{url("admin/user")}}" class="nav-link">
                             <i class="nav-icon fas fa-user "></i>
                             <p>User</p>
                         </a>
                     </li>
-                    <!--  settings   -->
+                    <!--  roles   -->
                     <li class="nav-item">
                         <a href="{{url("admin/role")}}" class="nav-link">
-                            <i class="nav-icon fas fa-heart "></i>
+                            <i class="nav-icon fas fa-shapes"></i>
                             <p>Role</p>
                         </a>
                     </li>

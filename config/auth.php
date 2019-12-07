@@ -46,6 +46,10 @@ return [
             'provider' => 'clients',
             'hash' => false,
         ],
+        'client' => [
+            'driver' => 'session',
+            'provider' => 'clients',
+        ],
     ],
 
     /*
@@ -72,12 +76,9 @@ return [
         ],
         'clients' => [
             'driver' => 'eloquent',
-            'model' => App\Client::class
+            'model' => App\Client::class,
         ],
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+
     ],
 
     /*
@@ -102,6 +103,12 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+//        'clients' => [
+//            'provider' => 'clients',
+//            'table' => 'password_resets',
+//            'expire' => 15,
+//            'throttle' => 60,
+//        ],
     ],
 
     /*

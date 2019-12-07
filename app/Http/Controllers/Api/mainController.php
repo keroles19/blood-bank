@@ -133,9 +133,9 @@ class mainController extends Controller
         }
         $postId = auth()->user()->posts()->pluck('posts.id')->toArray();
         if(count($postId))
-            return responseJson(true,'هذا المستخدم يفضل هذا البةست');
+            return responseJson(true,"success",$postId);
         else
-            return responseJson(false,'هذا المستخدم لم يفضل هذا البوست');
+            return responseJson(false,'error');
 
     }
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Posts;
-
-use App\Role;
+namespace App\Http\Controllers\Role;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -11,10 +11,15 @@ class roleController extends Controller
     //========================   validate  function
     private  function validateRole($request){
         $rules =[
-            "name"=>"required",
+            "name"=>"required|unique:roles,name",
+            "permissions_list" => "required|array",
+
         ];
         $message = [
             "name.required" => "name must  have value",
+            "permissions_list.required" => "permissions list must have value",
+
+
         ];
         $this->validate($request,$rules,$message);
     }
@@ -24,20 +29,22 @@ class roleController extends Controller
     public function index()
     {
         $records = Role::paginate(10);
-        return view('Posts/categories.index',compact('records'));
+        return view('roles.index',compact('records'));
     }
 
 
     public function create()
     {
-        return view("Posts/categories.create");
+        return view("roles.create");
     }
 
 
     public function store(Request $request)
     {
-        $this->validateCategory($request);
-        Role::create($request->all());
+        $this->validateRole($request);
+
+        $role = Role::create(['name'=>$request->name,'guard_name'=>$request->guard_name,'description'=>$request->description]);
+        $role->permissions()->sync($request->permissions_list);
         return redirect('admin/role')->with('status' , 'Role was create successfully :)');
     }
 
@@ -48,15 +55,26 @@ class roleController extends Controller
     public function edit($id)
     {
         $record = Role::findOrFail($id);
-        return view('role.edit',compact('record'));
+        return view('roles.edit',compact('record'));
     }
 
 
     public function update(Request $request, $id)
     {
-        $this->validateCategory($request);
+        $rules =[
+            "name"=>"required|unique:roles,name,".$id,
+            "permissions_list" => "required|array",
+
+        ];
+        $message = [
+            "name.required" => "name must  have value",
+            "permissions_list.required" => "permissions list must have value",
+        ];
+        $this->validate($request,$rules,$message);
         $record = Role::findOrFail($id);
-        $record->update($request->all());
+        $record->update($request->except(['permissions_list']));
+        $record->permissions()->sync($request->permissions_list);
+
         return redirect('admin\role')->with('status' , 'Role was updated successfully :)');
     }
 
@@ -65,6 +83,7 @@ class roleController extends Controller
     {
         $record = Role::findOrFail($id);
         $record->delete();
+
         return redirect('admin\role')->with('status' , 'Role was deleted successfully :)');
     }
 }

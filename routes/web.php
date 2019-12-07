@@ -12,29 +12,41 @@ use \Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    if(Auth::guest())
-    return view('auth/login');
-    elseif (Auth::check())
-        return view('admin');
+            // front pages
+Route::group(['namespace'=>'Front','middleware'=>'auth:client'],function () { //,'middleware'=>'auth:client'
+
+    Route::get('/','frontController@home')->name('front.home');
+    Route::get('article/{id}','frontController@article');
+    Route::post('toggle-favourite','frontController@toggleFavourite')->name('toggle-favourite');
+    Route::get('donations','frontController@donations');
+    Route::get('donation/{id}','frontController@showDonation');
+    Route::post('donation-search','frontController@donationSearch');
+    Route::get('articles','frontController@articles');
+    Route::get('articles-fav','frontController@articlesFavourite');
+    Route::get('contact-us','frontController@contact');
+    Route::get('/about','frontController@about');
+    Route::post('send-message','frontController@senMessage');
+//    Route::get('donation','frontController@donation');
+//    Route::post('create-donation','frontController@createDonation');
 });
 
+Route::get('show-loginForm','Auth\LoginController@showClientLoginFrom')->name('cLogin');
+Route::get('show-sign-up','Auth\RegisterController@showClientRegisterFrom')->name('cRegister');
+Route::post('login-system','Auth\LoginController@clientLogin');
+Route::post('register-system','Auth\RegisterController@createClient');
 
 
 Auth::routes();
 
 
 
-    Route::get('/admin', 'HomeController@index')->name('home');
-
-
-
-    Route::group(['middleware' => ['auth']], function () {
+                    // admin dashboard
+    Route::group(['middleware' => ['auth:web','auto_check_permission']], function () {
                         //admin routes
             Route::group(['prefix'=>'admin'],function (){
-
+                Route::get('/', 'HomeController@index')->name('home');
                 Route::resource('post','Posts\postController');
-                Route::resource('category','Posts\categoryController');
+                Route::resource('category','Posts\categoryController',['except'=>['show']]);
 
                 Route::resource('governorate','Governorate\governorateController');
 
@@ -65,7 +77,8 @@ Auth::routes();
                 Route::get('setting','setting\settingController@index');
                 Route::put('setting/{id}','setting\settingController@update');
 
-
+                Route::resource('role','Role\roleController',['except'=>['show']]);
+                Route::resource('user','User\userController');
 
 
 

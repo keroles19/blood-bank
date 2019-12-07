@@ -68,5 +68,20 @@ function activeStatus($status){
 }
 
 
+//========================================  save image
+//=============================
+    function saveImage($request) {
+    if($request->hasfile('image'))
+    {
+        $file =$request->file('image');
+        $ext = $file->getClientOriginalExtension();
+        $filename = 'post_image'.time().'.'.$ext;
+        Image::make($file)->save(public_path('images/'.$filename));
+    }
+    else{
+        $filename = '';
+    }
+    return $filename;
+    }
 
 

@@ -12,7 +12,7 @@ class CreatePostsTable extends Migration {
 			$table->timestamps();
 			$table->string('title', 200);
 			$table->string('image')->nullable();
-			$table->string('body');
+			$table->text('body');
 			$table->integer('category_id')->unsigned();
 		});
 	}

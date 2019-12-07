@@ -7,6 +7,6 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset("adminlte/js/demo.js")}}"></script>
 <script src="{{asset('app.js')}}"></script>
-
+@stack('js')
 </body>
 </html>

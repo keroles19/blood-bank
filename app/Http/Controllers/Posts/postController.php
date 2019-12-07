@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Posts;
 use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class postController extends Controller
 {
@@ -31,6 +31,7 @@ class postController extends Controller
 
 
 
+
     public function index()
     {
 
@@ -50,17 +51,7 @@ class postController extends Controller
 
        $this->validatePost($request);
 
-        if($request->hasfile('image'))
-        {
-            $file =$request->file('image');
-            $ext = $file->getClientOriginalExtension();
-            $filename = 'post_image'.time().'.'.$ext;
-//            $file->storeAs('public/postsImages',$filename);
-            Image::make($file)->save(public_path('images/'.$filename,20));
-        }
-        else{
-            $filename = 'noImage.png';
-        }
+       $filename = saveImage($request);
         $post = Post::create($request->all());
         $post->image = $filename;
         $post->save();
@@ -85,17 +76,52 @@ class postController extends Controller
     public function update(Request $request, $id)
     {
 
+
         $this->validatePost($request);
         $record = Post::findOrFail($id);
-        $record->update($request->all());
-        return redirect('admin\post')->with('status' , 'post was updated successfully :)');
+        if($record){
+            global  $filename;
+            $filename= $record->image;
+              if($request->hasFile('image')){
+                  if($record->image && file_exists('images/'.$record->image)){
+                      File::delete('images/'.$record->image);
+                      $filename = saveImage($request);
+
+                  }
+                  else{
+                      $filename = saveImage($request);
+                  }
+
+          }
+
+            $record->update($request->all());
+            $record->image = $filename;
+            $record->save();
+            return redirect('admin\post')->with('status' , 'post was updated successfully :)');
+
+        }
+        else{
+            return redirect('admin\edit\\'.$id)->with('error' , 'please try again ');
+
+        }
+
     }
 
 
     public function destroy($id)
     {
         $record = Post::findOrFail($id);
-        $record->delete();
-        return redirect('admin\post')->with('status' , 'post was deleted successfully :)');
+        $path = 'images/'.$record->image;
+
+        if($record->delete()){
+            if(file_exists($path)){
+                File::delete($path);
+            }
+            return redirect('admin\post')->with('status' , 'post was deleted successfully :)');
+        }
+        else{
+            return redirect('admin\post\\'.$id)->with('error' , 'Error please try again');
+        }
+
     }
 }

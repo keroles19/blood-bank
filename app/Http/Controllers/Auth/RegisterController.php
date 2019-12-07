@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Client;
 use App\Http\Controllers\Controller;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -28,7 +31,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/admin';
 
     /**
      * Create a new controller instance.
@@ -38,6 +41,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
+        $this->middleware('guest:client');
     }
 
     /**
@@ -53,6 +57,36 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+    }
+
+    protected function clientValidator($data)
+    {
+        $this->validate($data, [
+            'name' => ['required', 'string', 'max:255'],
+            'phone'=>['required'],
+            'blood_type_id' =>['required','exists:blood_types,id'],
+            'date_of_birth'=>['required'],
+            'city_id'=>['required','exists:cities,id'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:clients'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+    }
+
+    public  function showClientRegisterFrom(){
+        return view('front.signUp');
+    }
+
+    public  function createClient(Request $request){
+        $this->clientValidator($request);
+        $request->merge(["password" => Hash::make($request->password)]); // hash password
+        $client = Client::create($request->all());
+        $id = $client->id;
+            $client->api_token = str_random(60);                 // added random token
+            $client->save();
+           Auth::guard('client')->loginUsingId($id);
+            return $this->registered($request, $client)
+                ?: redirect($this->redirectPath());
+
     }
 
     /**
