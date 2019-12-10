@@ -166,7 +166,6 @@ class mainController extends Controller
 
         return responseJson(1,'success',$data);
     }
-
         // donation-request create
         public function donationRequestCreate(Request $request){
             $validate = validator()->make($request->all(),[

@@ -208,5 +208,22 @@ class frontController extends Controller
 
 
 
+    public function getIsFavouriteAttribute()
+    {
+        $favourite = $this->whereHas('favourites',function ($query){
+            $query->where('client_post.client_id',request()->user()->id);
+            $query->where('client_post.post_id',$this->id);
+        })->first();
+        // client
+        // null
+        if ($favourite)
+        {
+            return true;
+        }
+        return false;
+    }
+
+
+
 
 }
